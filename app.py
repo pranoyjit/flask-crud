@@ -3,9 +3,12 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://admin:password@flaskdb.clrnsymfz2e0.us-east-1.rds.amazonaws.com/flaskaws'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+DB_NAME = "database.db"
+
+app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
 app.secret_key = "somethingunique"
+
 
 db = SQLAlchemy(app)
 
@@ -20,6 +23,11 @@ class Book(db.Model):
         self.title = title
         self.author = author
         self.price = price
+
+
+with app.app_context():
+    db.create_all()
+
 
 @app.route('/')
 def index():
